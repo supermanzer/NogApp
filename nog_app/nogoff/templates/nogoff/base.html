@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title|default:"Nog Off"}}</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="{% static 'js/index.js' %}"></script>
+    {% block head %}
+        {% comment "Load custom head resources here in child templates" %}{% endcomment %}
+    {% endblock head %}
+</head>
+<body>
+{% block body %}
+{% comment "Load body in child templates here" %}{% endcomment %}
+{% endblock body %}
+</body>
+<script>
+    {% block script %}
+        {% comment "Load custom scripts here in child templates" %}{% endcomment %}
+    {% endblock script %}
+</script>
+</html>
