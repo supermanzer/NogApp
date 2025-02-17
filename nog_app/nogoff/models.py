@@ -32,7 +32,7 @@ class Event(models.Model):
 class Nog(models.Model):
     creator = models.CharField("Name", max_length=200)
     description = models.TextField("Description")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="nogs")
 
     def __str__(self):
         return self.creator + " - Nog for " + self.event.name
