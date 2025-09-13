@@ -7,7 +7,8 @@ from .models import Event
 # Create your views here.
 def index(request):
     template = "nogoff/index.html"
-    context = {"title": "NogApp Home"}
+    next_nogoff = Event.get_nearest()
+    context = {"title": "NogApp Home", "next_nogoff": next_nogoff}
     return render(request, template, context=context)
 
 
@@ -17,14 +18,16 @@ def about(request):
     return render(request, template, context=context)
 
 
-def event(request, start_date):
+def detail(request, nog_id):
+    template = "nogoff/detail.html"
+    model = Event.objects.get(pk=nog_id)
+    context = {"title": "Detail", "nogoff": model, "nogs": model.nogs.all()}
+    return render(request, template, context=context)
+
+
+def event(request, nog_id):
     template = "nogoff/event.html"
-    start_date = datetime.strptime(start_date, "%Y-%m-%d")
-    model = Event.objects.get(
-        event_date__year=start_date.year,
-        event_date__month=start_date.month,
-        event_date__day=start_date.day,
-    )
+    model = Event.objects.get(pk=nog_id)
     nogs = model.nogs.all()
     context = {"title": "Event", "nogoff": model, "nogs": nogs}
     print(context)

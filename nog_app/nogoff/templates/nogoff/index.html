@@ -1,5 +1,10 @@
 {% extends "nogoff/base.html" %}
+{% load static %}
 
-{% block body%}
+{% block body %}
 <h1>Welcome to Nog Off</h1>
+<hr />
+
+{% include "nogoff/components/next_nogoff.html" %}
+
 {% endblock %}

@@ -1,0 +1,12 @@
+{% load nogoff_tags %}
+
+{% if next_nogoff %}
+<div class="next-nogoff">
+    <h3>Next NogOff:</h3>
+    <a href="{% url 'event' next_nogoff.id %}">
+        {{ next_nogoff|format_event_datetime }} - {{next_nogoff.name}}
+    </a>
+</div>
+{% else %}
+<p>No upcoming NogOff events scheduled.</p>
+{% endif %}

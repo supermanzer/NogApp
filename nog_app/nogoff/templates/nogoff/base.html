@@ -10,24 +10,34 @@
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="{% static 'js/index.js' %}"></script>
     {% block head %}
-        {% comment "Load custom head resources here in child templates" %}{% endcomment %}
+    {% comment "Load custom head resources here in child templates" %}{% endcomment %}
     {% endblock head %}
 </head>
+
 <body>
     <header>
-        <!-- TODO: Add header content-->
+        <h1>{{title|default:"Nog Off"}}</h1>
         <nav>
-        
+            <ul class="nav">
+                <li>
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li>
+                    <a href="{% url 'about' %}">About</a>
+                </li>
+            </ul>
         </nav>
     </header>
-{% block body %}
-{% comment "Load body in child templates here" %}{% endcomment %}
-{% endblock body %}
-<footer></footer>
+    <main>
+        {% block body %}
+        {% comment "Load body in child templates here" %}{% endcomment %}
+        {% endblock body %}
+    </main>
+    <footer></footer>
 </body>
 <script>
     {% block script %}
-        {% comment "Load custom scripts here in child templates" %}{% endcomment %}
     {% endblock script %}
 </script>
+
 </html>

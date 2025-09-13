@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 # Create your models here.
@@ -18,6 +20,22 @@ class Settings(models.Model):
     def __str__(self):
         return "NogApp Settings"
 
+    def clean(self):
+        model = self.__class__
+        if model.objects.count() > 0 and self.id != model.objects.get().id:
+            raise ValidationError(
+                "There can be only one Settings instance"
+            )  # Changed message
+
+    def save(self, *args, **kwargs):
+        if (
+            not self.pk and Settings.objects.exists()
+        ):  # Check if any Settings object exists
+            raise ValidationError(
+                "There can be only one Settings instance"
+            )  # Changed message
+        return super(Settings, self).save(*args, **kwargs)
+
 
 class Event(models.Model):
     event_date = models.DateTimeField("Event Date")
@@ -27,6 +45,26 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_nearest_future_event(cls):
+        """
+        Returns the nearest Event in the future, or None if no future events exist.
+        """
+        now = timezone.now()
+        return (
+            cls.objects.filter(event_date__gte=now)
+            .order_by("event_date")
+            .first()
+        )
+    
+    @classmethod
+    def get_nearest(cls):
+        nearest_event = cls.get_nearest_future_event()
+        if nearest_event:
+            return nearest_event
+        else:
+            return None
 
 
 class Nog(models.Model):

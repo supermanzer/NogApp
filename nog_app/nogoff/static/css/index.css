@@ -1,7 +1,191 @@
 html {
     /* background-color: red; */
+    background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    height: 100%;
+}
+
+body {
+    /* Add styling for body */
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 header {
     /* Add styling for header */
+    background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+    display: grid;
+    grid-template-columns: min-content auto max-content;
+    grid-template-areas: logo nav;
+    gap: 0.5rem;
+    width: 100%;
+    box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.2);
+
+    .logo {
+        grid-area: logo;
+        padding: 1rem;
+
+        img {
+            width: 100px;
+        }
+    }
+
+    .nav {
+        grid-area: nav;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        ul {
+            display: flex;
+            list-style: none;
+
+            li {
+                margin: 0 1rem;
+
+                a {
+                    text-decoration: none;
+                    color: #333;
+                    font-weight: bold;
+
+                    &:hover {
+                        color: #66a6ff;
+                    }
+                }
+            }
+        }
+    }
+
+    h1 {
+        margin: 0;
+        padding: 1rem;
+    }
+}
+
+/* Material Design-inspired palette and elevation */
+:root {
+    --md-primary: #1976d2;
+    --md-primary-dark: #115293;
+    --md-accent: #ffca28;
+    --md-bg: #f5f5f5;
+    --md-surface: #fff;
+    --md-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1.5px 5px rgba(0, 0, 0, 0.08);
+    --md-radius: 8px;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', 'Roboto', Arial, sans-serif;
+    background: var(--md-bg);
+}
+
+header {
+    background: var(--md-primary);
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(25, 118, 210, 0.18), 0 2px 8px rgba(0, 0, 0, 0.12), 0 1.5px 5px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    min-height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 1px;
+    text-align: center;
+    /* Center the text */
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+nav ul.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 4rem;
+    /* Add padding to the right of the nav */
+}
+
+nav ul.nav li {
+    flex: 0 1 auto;
+}
+
+nav ul.nav li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--md-radius);
+    border: 2px solid #fff;
+    background: transparent;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: none;
+}
+
+nav ul.nav li a:hover,
+nav ul.nav li a:focus {
+    background: var(--md-primary-dark);
+    color: var(--md-accent);
+    border-color: var(--md-accent);
+    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.15);
+}
+
+main,
+.material-card {
+    background: var(--md-surface);
+    margin: 2rem 5rem;
+    padding: 3rem 2rem;
+    /* Increased padding around the main content */
+    border-radius: var(--md-radius);
+    box-shadow: var(--md-shadow);
+    max-width: 1200px;
+    text-align: center;
+}
+
+.material-btn {
+    background: var(--md-accent);
+    color: #333;
+    border: none;
+    border-radius: var(--md-radius);
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: var(--md-shadow);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.material-btn:hover,
+.material-btn:focus {
+    background: #ffe082;
+    box-shadow: 0 4px 12px rgba(255, 202, 40, 0.18);
+}
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    text-align: center;
+    color: #888;
+    background: transparent;
+    font-size: 0.9rem;
 }
