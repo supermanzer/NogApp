@@ -36,6 +36,10 @@
     <footer></footer>
 </body>
 <script>
+    if (!document.cookie.includes('device_id')) {
+        const deviceId = 'dev-' + Math.random().toString(36).substr(2, 16);
+        document.cookie = `device_id=${deviceId};path=/;max-age=31536000`;
+    }
     {% block script %}
     {% endblock script %}
 </script>

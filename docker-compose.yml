@@ -21,7 +21,7 @@ services:
     # - postgres:postgres
     # - redis:redis
     ports:
-      - "8000:8000"
+      - "8123:8000"
       - "8765:8765" # useful for using the django development server
     expose:
       - "9000"
@@ -31,15 +31,15 @@ services:
   #   - postgres
   # Defining our NGINX Web Server container
   nginx:
-  restart: always
-  build: ./nginx/
-  # We build this so we can create the log files
-  # and esure we use the correct configuration.
-  volumes:
-    - ./django:/www
-    - /home/logs/
-  links:
-    - django:django
-  ports:
-    - "8000:80"
+    restart: always
+    build: ./nginx/
+    # We build this so we can create the log files
+    # and esure we use the correct configuration.
+    volumes:
+      - ./django:/www
+      - /home/logs/
+    links:
+      - django:django
+    ports:
+      - "8080:80"
 

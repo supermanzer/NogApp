@@ -1,18 +1,37 @@
 {% extends "nogoff/base.html" %}
 
 {% block body %}
-    <h1>{{title}}</h1>
-    <h1>{{nogoff.name}}</h1>
-    <p>{{nogoff.event_date}}</p>
-    <p>{{nogoff.start_time}}</p>
-    <hr />
-    <h3>Nog Votes</h3>
-    <form>
-        {% for nog in nogs%}
-            <label>{{nog.creator}}</label>
-            <input type="number" name="{{nog.id}}" />
+<div class="nog-card">
+    <p>Hello {{user}}</p>
+    <div class="event-card-header">
+        <div class="event-title">{{ nogoff.name }}</div>
+        <div class="event-datetime">
+            {{ nogoff.event_date|date:"F j, Y" }}<br>
+            {{ nogoff.start_time|time:"gA" }} - {{ nogoff.end_time|time:"gA" }}
+        </div>
+    </div>
+    <h3 style="margin-top:2rem;">Nog Votes</h3>
+    <div class="errors"></div>
+    <form class="nog-form" data-nvotes="{{n_votes}}" action="{% url 'vote' nogoff.id%}" method="post">
+        {% csrf_token %}
+        {% for nog in nogs %}
+        <div class="nog-vote-group">
+            <label>{{ nog.creator }}</label>
+            <div class="vote-input-group">
+                <button type="button" class="vote-btn" data-action="decrement" aria-label="Decrement">-</button>
+                <input type="number" name="{{ nog.id }}" min="0" value="0" />
+                <button type="button" class="vote-btn" data-action="increment" aria-label="Increment">+</button>
+            </div>
+        </div>
         {% endfor %}
-        <input type="submit" value="Vote" />
-    </form>
 
+        <input type="submit" value="Vote" class="material-btn" />
+    </form>
+{% comment %} 
+    <h3>Django Form</h3>
+    <form action="{% url 'vote' nogoff.id %}" method="post">
+        {% csrf_token %}
+        {{form}}
+    </form> {% endcomment %}
+</div>
 {% endblock %}

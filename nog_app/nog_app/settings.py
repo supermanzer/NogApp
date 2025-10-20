@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path="../.env")
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "nogoff.middleware.device_user_middleware.DeviceUserMiddleware",
 ]
 
 ROOT_URLCONF = "nog_app.urls"
@@ -59,7 +61,7 @@ ROOT_URLCONF = "nog_app.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -79,10 +81,7 @@ WSGI_APPLICATION = "nog_app.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": 'django.db.backends.sqlite3',
-        "NAME": "nog.db"
-    }, 
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "nog.db"},
     "pg": {
         "ENGINE": "django.db.backends.{}".format(
             os.environ.get("DJANGO_DATABASE_ENGINE")
@@ -92,7 +91,7 @@ DATABASES = {
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
         "HOST": "postgres",
         "PORT": os.environ.get("POSTGRES_PORT"),
-    }
+    },
 }
 
 

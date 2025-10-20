@@ -4,13 +4,9 @@
 # Nginx as our reverse proxy server
 ####################################
 
-FROM nginx:latest
+FROM nginx:1.29-alpine
 
-#------------ SETTING NGINX CONFIGURATION ---------------
-RUN rm -f -- /etc/nginx/sites-enabled/default
-RUN mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
-RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
-ADD sites-enabled/nginx.conf /ect/nginx/nginx.conf
-RUN mkdir /home/logs
-RUN touch /hme/logs/error.log
-RUN touhc /home/logs/access.log
+
+RUN apk update && apk upgrade && \
+    rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d

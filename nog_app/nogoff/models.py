@@ -13,6 +13,10 @@ class User(models.Model):
     def __str__(self):
         return self.name
 
+    def votes_for_event(self, event):
+        """Return all the votes by this user for a given Event"""
+        return Vote.objects.filter(user=self, event=event)
+
 
 class Settings(models.Model):
     votes_per_person = models.IntegerField("Votes per Person")
@@ -57,7 +61,7 @@ class Event(models.Model):
             .order_by("event_date")
             .first()
         )
-    
+
     @classmethod
     def get_nearest(cls):
         nearest_event = cls.get_nearest_future_event()
@@ -70,16 +74,25 @@ class Event(models.Model):
 class Nog(models.Model):
     creator = models.CharField("Name", max_length=200)
     description = models.TextField("Description")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="nogs")
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="nogs"
+    )
 
     def __str__(self):
         return self.creator + " - Nog for " + self.event.name
 
+    def votes_by_user_event(self, user: User, event: Event):
+        return Vote.objects.filter(user=user, event=event, nog=self)
+
 
 class Vote(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    nog = models.ForeignKey(Nog, on_delete=models.CASCADE)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="votes"
+    )
+    nog = models.ForeignKey(Nog, on_delete=models.CASCADE, related_name="votes")
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="votes"
+    )
 
     def __str__(self):
         return (
