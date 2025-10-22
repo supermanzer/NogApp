@@ -6,7 +6,8 @@ from .models import Event, Nog, Settings, User, Vote
 # Register your models here.
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    pass
+    fields = ["name", "is_admin", "has_voted"]
+    readonly_fields = ["last_login"]
 
 
 @admin.register(Settings)

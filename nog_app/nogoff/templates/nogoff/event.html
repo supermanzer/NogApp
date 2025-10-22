@@ -1,4 +1,5 @@
 {% extends "nogoff/base.html" %}
+{% load nog_tags %}
 
 {% block body %}
 <div class="nog-card">
@@ -10,22 +11,37 @@
             {{ nogoff.start_time|time:"gA" }} - {{ nogoff.end_time|time:"gA" }}
         </div>
     </div>
-    <h3 style="margin-top:2rem;">Nog Votes</h3>
+    <h3 style="margin-top:2rem;">Nog Votes {% if user.has_voted %} - You have already voted{% endif %}</h3>
     <div class="errors"></div>
-    <form class="nog-form" data-nvotes="{{n_votes}}" action="{% url 'vote' nogoff.id%}" method="post">
+    {% if user.has_voted %} <button id="reset-votes">Reset Votes</button> {% endif %}
+    <form class="nog-form" data-nvotes="{{n_votes}}" action="{% url 'vote' nogoff.id%}" method="post" >
         {% csrf_token %}
         {% for nog in nogs %}
         <div class="nog-vote-group">
-            <label>{{ nog.creator }}</label>
+            <label>{{ nog.number }}</label>
             <div class="vote-input-group">
-                <button type="button" class="vote-btn" data-action="decrement" aria-label="Decrement">-</button>
-                <input type="number" name="{{ nog.id }}" min="0" value="0" />
-                <button type="button" class="vote-btn" data-action="increment" aria-label="Increment">+</button>
+                <button type="button" class="vote-btn" data-action="decrement" aria-label="Decrement" {% if user.has_voted %}disabled{% endif %}>-</button>
+                <input 
+                    type="number" 
+                    name="{{ nog.id }}" 
+                    min="0" 
+                    {% if user.has_voted %}
+                        value="{% get_votes_by_user_event nog user nogoff %}"
+                    {% else %}
+                        value="0"
+                    {% endif %}  
+                />
+                <button type="button" class="vote-btn" data-action="increment" aria-label="Increment" {% if user.has_voted %}disabled{% endif %}>+</button>
             </div>
         </div>
         {% endfor %}
 
-        <input type="submit" value="Vote" class="material-btn" />
+        <input 
+          type="submit" 
+          value="Vote" 
+          class="material-btn" 
+          {% if user.has_voted %} disabled {% endif %}
+        />
     </form>
 {% comment %} 
     <h3>Django Form</h3>

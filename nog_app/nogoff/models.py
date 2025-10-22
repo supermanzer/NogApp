@@ -72,17 +72,29 @@ class Event(models.Model):
 
 
 class Nog(models.Model):
-    creator = models.CharField("Name", max_length=200)
+    number = models.IntegerField(default=99)
+    creator = models.CharField("Creator", max_length=200)
     description = models.TextField("Description")
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="nogs"
     )
 
     def __str__(self):
-        return self.creator + " - Nog for " + self.event.name
+        nog_str = (
+            f"Nog {self.number}, Creator {self.creator} - {self.event.name} "
+        )
+        return nog_str
 
     def votes_by_user_event(self, user: User, event: Event):
         return Vote.objects.filter(user=user, event=event, nog=self)
+
+    class Meta:
+        # Each Nog must have a unique number per NogOff Event
+        constraints = [
+            models.UniqueConstraint(
+                fields=["event", "number"], name="unique_nog_per_event"
+            )
+        ]
 
 
 class Vote(models.Model):

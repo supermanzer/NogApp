@@ -69,4 +69,49 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
         }
     });
+
+    const resetBtn = document.getElementById("reset-votes");
+    if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+            // Get the current URL and extract the event ID
+            const pathParts = window.location.pathname.split('/');
+            const eventId = pathParts[pathParts.indexOf("event") + 1];
+
+            // Make the AJAX request
+            fetch(`/event/${eventId}/reset-votes`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => Promise.reject(data));
+                    }
+                    // On success, reload the page
+                    window.location.reload();
+                })
+                .catch(error => {
+                    // Display error in the errors div
+                    const errorDiv = document.querySelector('.errors');
+                    if (errorDiv) {
+                        errorDiv.innerHTML = `
+                        <div class="error-message">
+                            ${error.message || 'An error occurred while resetting votes'}
+                            <span class="error-close" title="Dismiss">&times;</span>
+                        </div>
+                    `;
+
+                        // Add click handler for error close button
+                        const closeBtn = errorDiv.querySelector('.error-close');
+                        if (closeBtn) {
+                            closeBtn.onclick = function () {
+                                errorDiv.innerHTML = '';
+                            };
+                        }
+                    }
+                });
+        });
+    }
 });

@@ -62,6 +62,15 @@ def vote(request: HttpRequest, nog_id: int) -> HttpResponse:
             for i in range(votes):
                 Vote(user=user, nog=nog, event=nogoff).save()
                 print(f"User {user} voted for Nog {nog}")
+        user.has_voted = True
+        user.save()
         return HttpResponse("<h1>Hi</h1>")
+    else:
+        return HttpResponseForbidden(content="GET method not permitted")
+
+
+def reset_votes(request: HttpRequest, nog_id: int) -> HttpResponse:
+    if request.method == "POST":
+        pass
     else:
         return HttpResponseForbidden(content="GET method not permitted")
