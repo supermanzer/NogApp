@@ -13,7 +13,7 @@
     </div>
     <h3 style="margin-top:2rem;">Nog Votes {% if user.has_voted %} - You have already voted{% endif %}</h3>
     <div class="errors"></div>
-    {% if user.has_voted %} <button id="reset-votes">Reset Votes</button> {% endif %}
+    {% if user.has_voted %} <button id="reset-votes" class="material-btn reset-btn">Reset Votes</button> {% endif %}
     <form class="nog-form" data-nvotes="{{n_votes}}" action="{% url 'vote' nogoff.id%}" method="post" >
         {% csrf_token %}
         {% for nog in nogs %}
@@ -43,11 +43,20 @@
           {% if user.has_voted %} disabled {% endif %}
         />
     </form>
-{% comment %} 
-    <h3>Django Form</h3>
-    <form action="{% url 'vote' nogoff.id %}" method="post">
-        {% csrf_token %}
-        {{form}}
-    </form> {% endcomment %}
+    <!-- Success Modal -->
+    <div id="voteSuccessModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Vote Recorded!</h2>
+            </div>
+            <div class="modal-body">
+                <p>Thank you for participating in democracy! Your votes have been recorded and you're now free to enjoy the NogOff festivities.</p>
+                <p>May the best nog win! 🎄</p>
+            </div>
+            <div class="modal-footer">
+                <button class="material-btn" onclick="window.location.reload()">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

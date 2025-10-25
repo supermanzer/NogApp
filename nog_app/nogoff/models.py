@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -69,6 +71,17 @@ class Event(models.Model):
             return nearest_event
         else:
             return None
+
+    @property
+    def is_active(self):
+        now = timezone.now()
+        event_start = timezone.make_aware(
+            datetime.combine(self.event_date.date(), self.start_time)
+        )
+        event_end = timezone.make_aware(
+            datetime.combine(self.event_date.date(), self.end_time)
+        )
+        return event_start <= now <= event_end
 
 
 class Nog(models.Model):

@@ -64,10 +64,45 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    nogForm.addEventListener("submit", function (e) {
-        if ((submitBtn && submitBtn.disabled) || (errorDiv && errorDiv.style.display === "flex")) {
-            e.preventDefault();
+    function showModal() {
+        const modal = document.getElementById('voteSuccessModal');
+        if (modal) {
+            modal.classList.add('show');
         }
+    }
+
+    nogForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if ((submitBtn && submitBtn.disabled) || (errorDiv && errorDiv.style.display === "flex")) {
+            return;
+        }
+
+        const formData = new FormData(nogForm);
+
+        // Disable the submit button during submission
+        if (submitBtn) submitBtn.disabled = true;
+
+        fetch(nogForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showModal();
+                } else {
+                    showError(data.message || 'An error occurred while submitting your votes');
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                showError('An error occurred while submitting your votes. Please try again.');
+                if (submitBtn) submitBtn.disabled = false;
+            });
     });
 
     const resetBtn = document.getElementById("reset-votes");
@@ -77,40 +112,50 @@ document.addEventListener("DOMContentLoaded", function () {
             const pathParts = window.location.pathname.split('/');
             const eventId = pathParts[pathParts.indexOf("event") + 1];
 
+            // Disable the reset button and show loading state
+            resetBtn.disabled = true;
+            resetBtn.textContent = 'Resetting...';
+
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                showError('CSRF token not found. Please refresh the page.');
+                resetBtn.disabled = false;
+                resetBtn.textContent = 'Reset Votes';
+                return;
+            }
+
             // Make the AJAX request
             fetch(`/event/${eventId}/reset-votes`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-CSRFToken': csrfToken.value,
                     'Content-Type': 'application/json'
                 },
             })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(data => Promise.reject(data));
+                        // Try to get JSON error message, fall back to status text
+                        return response.json()
+                            .catch(() => ({
+                                message: `Server error: ${response.statusText || response.status}`
+                            }))
+                            .then(data => Promise.reject(data));
                     }
                     // On success, reload the page
                     window.location.reload();
                 })
                 .catch(error => {
-                    // Display error in the errors div
-                    const errorDiv = document.querySelector('.errors');
-                    if (errorDiv) {
-                        errorDiv.innerHTML = `
-                        <div class="error-message">
-                            ${error.message || 'An error occurred while resetting votes'}
-                            <span class="error-close" title="Dismiss">&times;</span>
-                        </div>
-                    `;
-
-                        // Add click handler for error close button
-                        const closeBtn = errorDiv.querySelector('.error-close');
-                        if (closeBtn) {
-                            closeBtn.onclick = function () {
-                                errorDiv.innerHTML = '';
-                            };
-                        }
+                    // Handle network errors
+                    if (error instanceof TypeError) {
+                        showError('Network error. Please check your connection.');
+                    } else {
+                        // Use the existing showError function for consistency
+                        showError(error.message || 'An error occurred while resetting votes');
                     }
+                    // Reset button state
+                    resetBtn.disabled = false;
+                    resetBtn.textContent = 'Reset Votes';
                 });
         });
     }
