@@ -1,0 +1,481 @@
+.vote-input-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    max-width: 180px;
+}
+
+.vote-input-group .vote-btn[data-action="decrement"] {
+    order: 0;
+    margin-right: 0.2rem;
+}
+
+.vote-input-group input[type="number"] {
+    order: 1;
+    width: 60px;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.4rem 0.2rem;
+    border: 1.5px solid #b0bec5;
+    border-radius: 6px;
+    background: #f7fafd;
+    margin: 0 0.2rem;
+    appearance: textfield;
+}
+
+.vote-input-group .vote-btn[data-action="increment"] {
+    order: 2;
+    margin-left: 0.2rem;
+}
+
+html {
+    /* background-color: red; */
+    background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    height: 100%;
+}
+
+body {
+    /* Add styling for body */
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+header {
+    /* Add styling for header */
+    background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+    display: grid;
+    grid-template-columns: min-content auto max-content;
+    grid-template-areas: logo nav;
+    gap: 0.5rem;
+    width: 100%;
+    box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.2);
+
+    .logo {
+        grid-area: logo;
+        padding: 1rem;
+
+        img {
+            width: 100px;
+        }
+    }
+
+    .nav {
+        grid-area: nav;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        ul {
+            display: flex;
+            list-style: none;
+
+            li {
+                margin: 0 1rem;
+
+                a {
+                    text-decoration: none;
+                    color: #333;
+                    font-weight: bold;
+
+                    &:hover {
+                        color: #66a6ff;
+                    }
+                }
+            }
+        }
+    }
+
+    h1 {
+        margin: 0;
+        padding: 1rem;
+    }
+}
+
+/* Material Design-inspired palette and elevation */
+:root {
+    --md-primary: #1976d2;
+    --md-primary-dark: #115293;
+    --md-accent: #ffca28;
+    --md-bg: #f5f5f5;
+    --md-surface: #fff;
+    --md-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1.5px 5px rgba(0, 0, 0, 0.08);
+    --md-radius: 8px;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', 'Roboto', Arial, sans-serif;
+    background: var(--md-bg);
+}
+
+header {
+    background: var(--md-primary);
+    background-image: linear-gradient(to top, #a3bded 0%, #6991c7 100%);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    min-height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 1px;
+    text-align: center;
+    /* Center the text */
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+nav ul.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 4rem;
+    /* Add padding to the right of the nav */
+}
+
+nav ul.nav li {
+    flex: 0 1 auto;
+}
+
+nav ul.nav li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--md-radius);
+    border: 2px solid #fff;
+    background: transparent;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: none;
+}
+
+nav ul.nav li a:hover,
+nav ul.nav li a:focus {
+    background: var(--md-primary-dark);
+    color: var(--md-accent);
+    border-color: var(--md-accent);
+    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.15);
+}
+
+main,
+.material-card {
+    background: var(--md-surface);
+    margin: 2rem 5rem;
+    padding: 3rem 2rem;
+    /* Increased padding around the main content */
+    border-radius: var(--md-radius);
+    box-shadow: var(--md-shadow);
+    max-width: 1200px;
+    text-align: center;
+}
+
+.material-btn {
+    background: linear-gradient(135deg, #2e7d32 0%, #c62828 100%);
+    color: white;
+    border: none;
+    border-radius: var(--md-radius);
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: var(--md-shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.material-btn:hover,
+.material-btn:focus {
+    background: linear-gradient(135deg, #388e3c 0%, #d32f2f 100%);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+    transform: translateY(-1px);
+}
+
+.material-btn:disabled,
+input[type="submit"].material-btn:disabled {
+    background: #e0e0e0 !important;
+    color: #888 !important;
+    box-shadow: none !important;
+    border: none !important;
+    cursor: not-allowed;
+    opacity: 1;
+    transition: none;
+}
+
+/* Reset button styling */
+.material-btn.reset-btn {
+    background: linear-gradient(135deg, #1b5e20 0%, #b71c1c 100%);
+    color: white;
+    border: none;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.material-btn.reset-btn:hover {
+    background: linear-gradient(135deg, #2e7d32 0%, #d32f2f 100%);
+    box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+    transform: translateY(-1px);
+}
+
+.material-btn.reset-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(183, 28, 28, 0.2);
+}
+
+.material-btn.reset-btn:disabled {
+    background: linear-gradient(135deg, #c8e6c9 0%, #ffcdd2 100%) !important;
+    color: #666 !important;
+    box-shadow: none !important;
+    transform: none !important;
+    opacity: 0.7;
+}
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    text-align: center;
+    color: #888;
+    background: transparent;
+    font-size: 0.9rem;
+}
+
+/* Nog voting form styles */
+.nog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 0 0 0;
+    max-width: 600px;
+    margin: 2rem auto 0 auto;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.nog-form .nog-vote-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+.vote-btn {
+    background: #e3f0ff;
+    color: #1976d2;
+    border: 1.5px solid #b0bec5;
+    border-radius: 8px;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border 0.15s, box-shadow 0.12s, transform 0.12s;
+    user-select: none;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.18), 0 2px 6px rgba(0, 0, 0, 0.10);
+}
+
+.vote-btn:active {
+    background: #bbdefb;
+    color: #0d47a1;
+    border-color: #90caf9;
+    box-shadow: 0 1px 2px rgba(25, 118, 210, 0.10);
+    transform: translateY(2px) scale(0.97);
+}
+
+.vote-btn:disabled {
+    background: #f5f5f5;
+    color: #b0bec5;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+
+.vote-btn:active {
+    background: #bbdefb;
+    color: #0d47a1;
+    border-color: #90caf9;
+}
+
+.vote-btn:disabled {
+    background: #f5f5f5;
+    color: #b0bec5;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+
+.nog-form label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #1976d2;
+}
+
+.nog-form input[type="radio"],
+.nog-form input[type="checkbox"] {
+    margin-right: 0.75rem;
+}
+
+.nog-form button,
+.nog-form input[type="submit"] {
+    margin-top: 1.5rem;
+    align-self: flex-end;
+    min-width: 120px;
+}
+
+/* Error message styling for nog-form */
+.errors {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    background: #fff3cd;
+    color: #856404;
+    border: 1.5px solid #ffeeba;
+    border-radius: 6px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    position: sticky;
+    min-height: 2.2rem;
+    box-shadow: 0 1px 4px rgba(255, 202, 40, 0.10);
+}
+
+.error-msg {
+    flex: 1 1 auto;
+}
+
+.error-close {
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #856404;
+    margin-left: 0.5rem;
+    transition: color 0.2s;
+}
+
+.error-close:hover {
+    color: #b95c00;
+}
+
+/* Event card header styles */
+.event-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem 2rem 1.25rem 2rem;
+    border-bottom: 1.5px solid #e3e3e3;
+    background: linear-gradient(90deg, #e3f0ff 0%, #f7fafd 100%);
+    border-top-left-radius: var(--md-radius);
+    border-top-right-radius: var(--md-radius);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    padding: 0;
+    border-radius: var(--md-radius);
+    box-shadow: var(--md-shadow);
+    width: 90%;
+    max-width: 500px;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #2e7d32 0%, #c62828 100%);
+    color: white;
+    padding: 1.5rem;
+    border-top-left-radius: var(--md-radius);
+    border-top-right-radius: var(--md-radius);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.modal-body {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.event-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1976d2;
+    margin: 0;
+    flex: 1 1 auto;
+    text-align: left;
+}
+
+.event-datetime {
+    font-size: 1.1rem;
+    color: #333;
+    text-align: right;
+    min-width: 180px;
+    margin-left: 2rem;
+    flex: 0 0 auto;
+}

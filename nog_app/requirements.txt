@@ -1,8 +1,12 @@
 asgiref==3.8.1
 click==8.1.8
-Django==5.1.5
+Django==5.2.9
 h11==0.14.0
 psycopg2-binary==2.9.10
 python-dotenv==1.1.1
 sqlparse==0.5.3
 uvicorn==0.34.0
+pywebpush==1.14.1
+cryptography==41.0.7
+gunicorn==21.2.0
+whitenoise==6.6.0

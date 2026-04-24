@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models import Count
 
 from .models import Event, Nog, Settings, User, Vote
+from .push_models import PushNotificationLog, PushSubscription
 
 # ================= INLINES ========================
 
@@ -59,3 +60,25 @@ class NogAdmin(admin.ModelAdmin):
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(PushSubscription)
+class PushSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ("user", "created_at", "is_active")
+    list_filter = ("is_active", "created_at")
+    search_fields = ("user__name",)
+    readonly_fields = ("created_at", "updated_at")
+
+
+@admin.register(PushNotificationLog)
+class PushNotificationLogAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "title",
+        "notification_type",
+        "status",
+        "created_at",
+    )
+    list_filter = ("status", "notification_type", "created_at")
+    search_fields = ("user__name", "title", "body")
+    readonly_fields = ("created_at", "sent_at")

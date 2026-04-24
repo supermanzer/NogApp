@@ -1,45 +1,91 @@
 ######################################################################
-# DOCKER-COMPOSE.YML - Defining the container configuration we will
-# utilize for the production level application.  The main difference
-# between this and our local development "docker-compose.yml" file is
-# that it relies upon the NGINX server while the dev version uses
-# the Django development server.
+# DOCKER-COMPOSE.YML - Production-ready container configuration
+# This configuration uses Gunicorn as the application server and
+# Nginx as the reverse proxy web server.
 ######################################################################
 
+version: '3.8'
+
 services:
-  # First we will define the container for our Django application
+  # Django application service
   django:
     restart: always
     build: ./nog_app/
-    # This building process will ensure we build a
-    # container with all the requirements we need.
-    # command: ./run_web.sh
+    container_name: nog_django
+    # Run the startup script and then gunicorn
+    command: >
+      sh -c "
+        python manage.py migrate &&
+        python manage.py create_superuser &&
+        python manage.py collectstatic --noinput &&
+        gunicorn --config /app/gunicorn_config.py nog_app.wsgi:application
+      "
     volumes:
-      - ./nog_app/:/app
-      - /var/log/gunicorn
-    # links:
-    # - postgres:postgres
-    # - redis:redis
-    ports:
-      - "8123:8000"
-      - "8765:8765" # useful for using the django development server
+      # Mount app directory for code
+      - ./nog_app:/app
+      # Named volume for static files
+      - static_volume:/app/staticfiles
+      # Logs directory
+      - ./nog_app/logs:/app/logs
+    # Don't expose directly to host - only to nginx
     expose:
-      - "9000"
+      - "8000"
+    # Internal network communication only
+    networks:
+      - nog_network
     env_file:
       - .env
-  # depends_on:
-  #   - postgres
-  # Defining our NGINX Web Server container
+    environment:
+      - DEBUG=False
+      - PYTHONUNBUFFERED=1
+      # Superuser credentials (set these in .env for production)
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME:-admin}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL:-admin@example.com}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD:-changeme}
+    # Health check for the container
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/').close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx reverse proxy server
   nginx:
     restart: always
     build: ./nginx/
-    # We build this so we can create the log files
-    # and esure we use the correct configuration.
+    container_name: nog_nginx
     volumes:
-      - ./django:/www
-      - /home/logs/
-    links:
-      - django:django
+      # Mount nginx configuration - matches Dockerfile copy destination
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      # Serve static files from django volume
+      - static_volume:/app/staticfiles
+      # Logs directory
+      - ./logs/nginx:/var/log/nginx
+    # Expose to host
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"  # Ready for HTTPS
+    # Depends on django being ready
+    depends_on:
+      django:
+        condition: service_healthy
+    networks:
+      - nog_network
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# Named volumes for persistent data
+volumes:
+  static_volume:
+
+# Networks for service communication
+networks:
+  nog_network:
+    driver: bridge
 
