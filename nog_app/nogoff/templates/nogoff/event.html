@@ -11,6 +11,9 @@
             {{ nogoff.start_time|time:"gA" }} - {{ nogoff.end_time|time:"gA" }}
         </div>
     </div>
+    <div style="margin-top:1.5rem;">
+        <button id="enable-notifications" class="material-btn" type="button">Enable Voting Reminders</button>
+    </div>
     <h3 style="margin-top:2rem;">Nog Votes {% if user.has_voted %} - You have already voted{% endif %}</h3>
     <div class="errors"></div>
     {% if user.has_voted %} <button id="reset-votes" class="material-btn reset-btn">Reset Votes</button> {% endif %}

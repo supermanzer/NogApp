@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -22,6 +22,11 @@ class User(models.Model):
 
 class Settings(models.Model):
     votes_per_person = models.IntegerField("Votes per Person")
+    voting_reminder_minutes_before_end = models.PositiveIntegerField(
+        "Voting Reminder (minutes before voting ends)",
+        default=30,
+        help_text="How many minutes before an event's voting closes to send a push notification reminder.",
+    )
 
     def __str__(self):
         return "NogApp Settings"
@@ -48,6 +53,12 @@ class Event(models.Model):
     start_time = models.TimeField("Start Time")
     end_time = models.TimeField("End Time")
     name = models.CharField("Event Name", max_length=200)
+    voting_reminder_sent_at = models.DateTimeField(
+        "Voting Reminder Sent At",
+        null=True,
+        blank=True,
+        help_text="Set automatically once the voting-closes-soon reminder has been sent for this event. Clear it to allow the reminder to be sent again.",
+    )
 
     def __str__(self):
         return self.name
@@ -73,15 +84,21 @@ class Event(models.Model):
             return None
 
     @property
-    def is_active(self):
-        now = timezone.now()
-        event_start = timezone.make_aware(
+    def start_datetime(self):
+        return timezone.make_aware(
             datetime.combine(self.event_date.date(), self.start_time)
         )
-        event_end = timezone.make_aware(
+
+    @property
+    def end_datetime(self):
+        return timezone.make_aware(
             datetime.combine(self.event_date.date(), self.end_time)
         )
-        return event_start <= now <= event_end
+
+    @property
+    def is_active(self):
+        now = timezone.now()
+        return self.start_datetime <= now <= self.end_datetime
 
 
 class Nog(models.Model):

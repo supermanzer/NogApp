@@ -133,8 +133,17 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# WhiteNoise configuration for efficient static file serving
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# WhiteNoise configuration for efficient static file serving.
+# Django 5.1+ reads STORAGES instead of the legacy STATICFILES_STORAGE
+# setting; the old name is silently ignored, not just deprecated.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Media files
 MEDIA_URL = "/media/"

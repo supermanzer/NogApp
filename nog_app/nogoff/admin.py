@@ -29,6 +29,9 @@ class NogInline(admin.TabularInline):
 class UserAdmin(admin.ModelAdmin):
     fields = ["name", "is_admin", "has_voted"]
     readonly_fields = ["last_login"]
+    list_display = ("name", "is_admin", "has_voted", "last_login")
+    list_filter = ("is_admin", "has_voted")
+    search_fields = ("name",)
 
 
 @admin.register(Settings)
@@ -59,7 +62,9 @@ class NogAdmin(admin.ModelAdmin):
 
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("user", "nog", "event")
+    list_filter = ("event",)
+    search_fields = ("user__name", "nog__creator")
 
 
 @admin.register(PushSubscription)

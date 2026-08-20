@@ -204,6 +204,25 @@ class PushNotificationService:
 
         return results
 
+    def send_voting_reminder(self, event, minutes_remaining: int) -> Dict:
+        """
+        Notify all subscribed users that voting for an event is closing soon.
+
+        Args:
+            event: Event object whose voting window is ending
+            minutes_remaining: Minutes before voting closes, used in the message
+
+        Returns:
+            Dictionary with results for each user (see send_notification_to_all_users)
+        """
+        title = "Voting closes soon!"
+        body = f"Only {minutes_remaining} minutes left to vote in {event.name}!"
+        return self.send_notification_to_all_users(
+            title=title,
+            body=body,
+            notification_type="voting_ending_soon",
+        )
+
     def send_notification_to_all_users(
         self,
         title: str,

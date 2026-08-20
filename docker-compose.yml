@@ -4,7 +4,7 @@
 # Nginx as the reverse proxy web server.
 ######################################################################
 
-version: '3.8'
+# version: '3.8'
 
 services:
   # Django application service
@@ -49,6 +49,30 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # Background scheduler: periodically checks events for an approaching
+  # voting deadline and sends a push notification reminder via the same
+  # Django code/database as the main app.
+  scheduler:
+    restart: always
+    build: ./nog_app/
+    container_name: nog_scheduler
+    command: python manage.py run_reminder_scheduler
+    volumes:
+      # Mount app directory for code (same source, same SQLite DB file)
+      - ./nog_app:/app
+      # Logs directory
+      - ./nog_app/logs:/app/logs
+    networks:
+      - nog_network
+    env_file:
+      - .env
+    environment:
+      - DEBUG=False
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      django:
+        condition: service_healthy
 
   # Nginx reverse proxy server
   nginx:

@@ -1,6 +1,46 @@
 // alert("Hello, world!");
 
 document.addEventListener("DOMContentLoaded", function () {
+    const notifyBtn = document.getElementById("enable-notifications");
+    if (notifyBtn && window.pushNotifications) {
+        // push-notifications.js registers its own DOMContentLoaded listener to call
+        // init(), but this script loads first, so that listener hasn't run yet when
+        // we get here. init() is safe to call again (service worker registration and
+        // the public-key fetch are both idempotent), so we await it ourselves.
+        pushNotifications.init().then(function (ready) {
+            if (!ready) {
+                notifyBtn.disabled = true;
+                notifyBtn.textContent = "Notifications Unsupported";
+                return;
+            }
+
+            pushNotifications.isSubscribed().then(function (subscribed) {
+                if (subscribed) {
+                    notifyBtn.textContent = "Voting Reminders Enabled";
+                    notifyBtn.disabled = true;
+                }
+            });
+
+            notifyBtn.addEventListener("click", async function () {
+                notifyBtn.disabled = true;
+                notifyBtn.textContent = "Enabling...";
+
+                const granted = await pushNotifications.requestPermission();
+                if (!granted) {
+                    notifyBtn.disabled = false;
+                    notifyBtn.textContent = "Enable Voting Reminders";
+                    return;
+                }
+
+                const subscribed = await pushNotifications.subscribe();
+                notifyBtn.textContent = subscribed
+                    ? "Voting Reminders Enabled"
+                    : "Enable Voting Reminders";
+                notifyBtn.disabled = subscribed;
+            });
+        });
+    }
+
     const nogForm = document.querySelector("form.nog-form");
     if (!nogForm) return;
     const errorDiv = document.querySelector(".errors");
